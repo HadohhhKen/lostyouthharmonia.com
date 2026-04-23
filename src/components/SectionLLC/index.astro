@@ -386,8 +386,6 @@ const pinnedVideos = [
         // @ts-ignore - fbq is loaded globally
         if (typeof fbq === "function") {
           // @ts-ignore
-          fbq("set", "testEventCode", "TEST26198");
-          // @ts-ignore
           fbq("track", "FindLocation", {
             content_name: platform,
             content_category: "DSP Link",
