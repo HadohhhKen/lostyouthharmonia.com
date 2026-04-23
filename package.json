@@ -1,0 +1,29 @@
+{
+  "name": "lostyouthharmonia.com",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types": "wrangler types"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^13.2.0",
+    "@studio-freight/lenis": "^1.0.42",
+    "astro": "^6.1.9",
+    "gsap": "^3.15.0",
+    "wrangler": "^4.84.1"
+  },
+  "overrides": {
+    "vite": "^7"
+  },
+  "devDependencies": {
+    "@types/gsap": "^1.20.2",
+    "sass-embedded": "^1.99.0"
+  }
+}

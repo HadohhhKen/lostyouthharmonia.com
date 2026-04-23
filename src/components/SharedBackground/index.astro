@@ -1,0 +1,26 @@
+---
+import { Image } from "astro:assets";
+import styles from "./index.module.scss";
+import bgLight from "../../assets/images/hero/bg-light.png";
+import bgDark from "../../assets/images/hero/bg-dark.png";
+---
+
+<div class={styles.SharedBackground} data-gsap="global-bg">
+  <Image
+    src={bgLight}
+    alt=""
+    class={styles["light-only"]}
+    fetchpriority="high"
+    loading="eager"
+    format="avif"
+  />
+  <Image
+    src={bgDark}
+    alt=""
+    class={styles["dark-only"]}
+    fetchpriority="high"
+    loading="eager"
+    format="avif"
+  />
+  <div class={styles.overlay}></div>
+</div>

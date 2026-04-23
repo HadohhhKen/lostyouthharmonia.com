@@ -1,0 +1,406 @@
+---
+import { Image, getImage } from "astro:assets";
+import styles from "./index.module.scss";
+import bgDesktop from "../../assets/images/section-llc/bg.png";
+import bgMobile from "../../assets/images/section-llc/bg-sp.png";
+
+// Optimize background images
+const bgDesktopOpt = await getImage({ src: bgDesktop, format: "avif" });
+const bgMobileOpt = await getImage({ src: bgMobile, format: "avif" });
+const bgFallback = await getImage({ src: bgDesktop, format: "jpeg" });
+
+import instagramData from "../../data/instagram.json";
+
+// Pinned Post IDs - consistent with InstagramFeed
+const PINNED_POST_IDS = [
+  "3824109189711481931_79963192301", // Story 01 (Rainy girl)
+  "3818326888394212863_79963192301", // System Status: Breached (Reel)
+  //"3820500952948928608_79963192301", // Break My Fall (Poster)
+];
+
+// Extract videos for pinned posts and prepend the main promo video
+const pinnedVideos = [
+  "/assets/video/break-my-fall.mp4", // Main Promo Video (First)
+  ...(instagramData as any[])
+    .filter((post) => PINNED_POST_IDS.includes(post.id))
+    .sort(
+      (a, b) => PINNED_POST_IDS.indexOf(a.id) - PINNED_POST_IDS.indexOf(b.id),
+    )
+    .map((post) => {
+      const videoAsset = post.assets.find((a: any) => a.type === "video");
+      return videoAsset ? videoAsset.localPath : null;
+    })
+    .filter(Boolean),
+];
+---
+
+<section id="overview" class={styles.SectionLLC}>
+  <picture>
+    <source
+      media="(max-width: 768px)"
+      srcset={bgMobileOpt.src}
+      type="image/avif"
+    />
+    <source
+      media="(min-width: 769px)"
+      srcset={bgDesktopOpt.src}
+      type="image/avif"
+    />
+    <img class={styles.SectionLLC__bg} src={bgFallback.src} alt="" />
+  </picture>
+  <div class={styles.SectionLLC__overlay} data-gsap="overlay"></div>
+  <div class={styles.SectionLLC__inner}>
+    <div class={styles.card} data-gsap="card">
+      <div class={styles["content-side"]}>
+        <h2 class={styles.title} data-gsap="title">
+          <span>LOST YOUTH</span>
+          <span> HARMONIA</span>
+        </h2>
+
+        <div class={styles.dspLinks} data-gsap="dsp">
+          <p class={styles.dspLabel}>Listen on</p>
+          <div class={styles.dspIcons}>
+            <a
+              href="https://open.spotify.com/artist/5du5iJXYbuEi3hgvzDBVW7"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Spotify"
+              class={styles.dspButton}
+              data-track-dsp="Spotify"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="2.2rem"
+                width="auto"
+                viewBox="0 0 559 168"
+                class={styles.dspLogo}
+              >
+                <path
+                  fill="currentColor"
+                  d="m83.996 0.277c-46.249 0-83.743 37.493-83.743 83.742 0 46.251 37.494 83.741 83.743 83.741 46.254 0 83.744-37.49 83.744-83.741 0-46.246-37.49-83.738-83.745-83.738l0.001-0.004zm38.404 120.78c-1.5 2.46-4.72 3.24-7.18 1.73-19.662-12.01-44.414-14.73-73.564-8.07-2.809 0.64-5.609-1.12-6.249-3.93-0.643-2.81 1.11-5.61 3.926-6.25 31.9-7.288 59.263-4.15 81.337 9.34 2.46 1.51 3.24 4.72 1.73 7.18zm10.25-22.802c-1.89 3.072-5.91 4.042-8.98 2.152-22.51-13.836-56.823-17.843-83.448-9.761-3.453 1.043-7.1-0.903-8.148-4.35-1.04-3.453 0.907-7.093 4.354-8.143 30.413-9.228 68.222-4.758 94.072 11.127 3.07 1.89 4.04 5.91 2.15 8.976v-0.001zm0.88-23.744c-26.99-16.031-71.52-17.505-97.289-9.684-4.138 1.255-8.514-1.081-9.768-5.219-1.254-4.14 1.08-8.513 5.221-9.771 29.581-8.98 78.756-7.245 109.83 11.202 3.73 2.209 4.95 7.016 2.74 10.733-2.2 3.722-7.02 4.949-10.73 2.739zm94.56 3.072c-14.46-3.448-17.03-5.868-17.03-10.953 0-4.804 4.52-8.037 11.25-8.037 6.52 0 12.98 2.455 19.76 7.509 0.2 0.153 0.46 0.214 0.71 0.174 0.26-0.038 0.48-0.177 0.63-0.386l7.06-9.952c0.29-0.41 0.21-0.975-0.18-1.288-8.07-6.473-17.15-9.62-27.77-9.62-15.61 0-26.52 9.369-26.52 22.774 0 14.375 9.41 19.465 25.67 23.394 13.83 3.187 16.17 5.857 16.17 10.629 0 5.29-4.72 8.58-12.32 8.58-8.44 0-15.33-2.85-23.03-9.51-0.19-0.17-0.45-0.24-0.69-0.23-0.26 0.02-0.49 0.14-0.65 0.33l-7.92 9.42c-0.33 0.4-0.29 0.98 0.09 1.32 8.96 8 19.98 12.22 31.88 12.22 16.82 0 27.69-9.19 27.69-23.42 0.03-12.007-7.16-18.657-24.77-22.941l-0.03-0.013zm62.86-14.26c-7.29 0-13.27 2.872-18.21 8.757v-6.624c0-0.523-0.42-0.949-0.94-0.949h-12.95c-0.52 0-0.94 0.426-0.94 0.949v73.601c0 0.52 0.42 0.95 0.94 0.95h12.95c0.52 0 0.94-0.43 0.94-0.95v-23.23c4.94 5.53 10.92 8.24 18.21 8.24 13.55 0 27.27-10.43 27.27-30.369 0.02-19.943-13.7-30.376-27.26-30.376l-0.01 0.001zm12.21 30.375c0 10.149-6.25 17.239-15.21 17.239-8.85 0-15.53-7.41-15.53-17.239 0-9.83 6.68-17.238 15.53-17.238 8.81-0.001 15.21 7.247 15.21 17.237v0.001zm50.21-30.375c-17.45 0-31.12 13.436-31.12 30.592 0 16.972 13.58 30.262 30.91 30.262 17.51 0 31.22-13.39 31.22-30.479 0-17.031-13.62-30.373-31.01-30.373v-0.002zm0 47.714c-9.28 0-16.28-7.46-16.28-17.344 0-9.929 6.76-17.134 16.07-17.134 9.34 0 16.38 7.457 16.38 17.351 0 9.927-6.8 17.127-16.17 17.127zm68.27-46.53h-14.25v-14.566c0-0.522-0.42-0.948-0.94-0.948h-12.95c-0.52 0-0.95 0.426-0.95 0.948v14.566h-6.22c-0.52 0-0.94 0.426-0.94 0.949v11.127c0 0.522 0.42 0.949 0.94 0.949h6.22v28.795c0 11.63 5.79 17.53 17.22 17.53 4.64 0 8.49-0.96 12.12-3.02 0.3-0.16 0.48-0.48 0.48-0.82v-10.6c0-0.32-0.17-0.63-0.45-0.8-0.28-0.18-0.63-0.19-0.92-0.04-2.49 1.25-4.9 1.83-7.6 1.83-4.15 0-6.01-1.89-6.01-6.11v-26.76h14.25c0.52 0 0.94-0.426 0.94-0.949v-11.126c0.02-0.523-0.4-0.949-0.93-0.949l-0.01-0.006zm49.64 0.057v-1.789c0-5.263 2.02-7.61 6.54-7.61 2.7 0 4.87 0.536 7.3 1.346 0.3 0.094 0.61 0.047 0.85-0.132 0.25-0.179 0.39-0.466 0.39-0.77v-10.91c0-0.417-0.26-0.786-0.67-0.909-2.56-0.763-5.84-1.546-10.76-1.546-11.95 0-18.28 6.734-18.28 19.467v2.74h-6.22c-0.52 0-0.95 0.426-0.95 0.948v11.184c0 0.522 0.43 0.949 0.95 0.949h6.22v44.405c0 0.53 0.43 0.95 0.95 0.95h12.94c0.53 0 0.95-0.42 0.95-0.95v-44.402h12.09l18.52 44.402c-2.1 4.66-4.17 5.59-6.99 5.59-2.28 0-4.69-0.68-7.14-2.03-0.23-0.12-0.51-0.14-0.75-0.07-0.25 0.09-0.46 0.27-0.56 0.51l-4.39 9.63c-0.21 0.46-0.03 0.99 0.41 1.23 4.58 2.48 8.71 3.54 13.82 3.54 9.56 0 14.85-4.46 19.5-16.44l22.46-58.037c0.12-0.292 0.08-0.622-0.1-0.881-0.17-0.257-0.46-0.412-0.77-0.412h-13.48c-0.41 0-0.77 0.257-0.9 0.636l-13.81 39.434-15.12-39.46c-0.14-0.367-0.49-0.61-0.88-0.61h-22.12v-0.003zm-28.78-0.057h-12.95c-0.52 0-0.95 0.426-0.95 0.949v56.481c0 0.53 0.43 0.95 0.95 0.95h12.95c0.52 0 0.95-0.42 0.95-0.95v-56.477c0-0.523-0.42-0.949-0.95-0.949v-0.004zm-6.4-25.719c-5.13 0-9.29 4.152-9.29 9.281 0 5.132 4.16 9.289 9.28 9.289s9.28-4.157 9.28-9.289c0-5.128-4.16-9.281-9.28-9.281zm113.42 43.88c-5.12 0-9.11-4.115-9.11-9.112s4.04-9.159 9.16-9.159 9.11 4.114 9.11 9.107c0 4.997-4.04 9.164-9.16 9.164zm0.05-17.365c-4.67 0-8.2 3.71-8.2 8.253 0 4.541 3.51 8.201 8.15 8.201 4.67 0 8.2-3.707 8.2-8.253 0-4.541-3.51-8.201-8.15-8.201zm2.02 9.138l2.58 3.608h-2.18l-2.32-3.31h-1.99v3.31h-1.82v-9.564h4.26c2.23 0 3.69 1.137 3.69 3.051 0.01 1.568-0.9 2.526-2.21 2.905h-0.01zm-1.54-4.315h-2.37v3.025h2.37c1.18 0 1.89-0.579 1.89-1.514 0-0.984-0.71-1.511-1.89-1.511z"
+                ></path>
+              </svg>
+            </a>
+            <a
+              href="https://music.apple.com/artist/lost-youth-harmonia/1862785909"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Apple Music"
+              class={styles.dspButton}
+              data-track-dsp="Apple Music"
+            >
+              <svg
+                version="1.1"
+                height="2.2rem"
+                width="auto"
+                viewBox="0 0 84.3 20.7"
+                class={styles.dspLogo}
+              >
+                <path
+                  fill="currentColor"
+                  d="M35.4,20.1V6.6h-0.1l-5.4,13.5h-2.1L22.4,6.6h-0.1v13.5h-2.5V1.8H23l5.8,14.6h0.1l5.8-14.6H38v18.3L35.4,20.1L35.4,20.1z M52.1,20.1h-2.6v-2.3h-0.1c-0.7,1.6-2.1,2.5-4.1,2.5c-2.9,0-4.6-1.9-4.6-5V6.7h2.7v8.1c0,2,1,3.1,2.8,3.1c2,0,3.1-1.4,3.1-3.5V6.7 h2.7L52.1,20.1L52.1,20.1z M59.5,6.5c3.1,0,5,1.7,5.1,4.2h-2.5c-0.2-1.3-1.1-2.1-2.6-2.1C58,8.6,57,9.3,57,10.4c0,0.8,0.6,1.4,2,1.7 l2.1,0.5c2.7,0.6,3.7,1.7,3.7,3.6c0,2.4-2.2,4.1-5.3,4.1c-3.3,0-5.3-1.6-5.5-4.2h2.7c0.2,1.4,1.2,2.1,2.8,2.1c1.6,0,2.6-0.7,2.6-1.8 c0-0.9-0.5-1.4-1.9-1.7l-2.1-0.5c-2.5-0.6-3.7-1.8-3.7-3.8C54.4,8.1,56.4,6.5,59.5,6.5z M66.8,3.2c0-0.9,0.7-1.6,1.6-1.6 c0.9,0,1.6,0.7,1.6,1.6c0,0.9-0.7,1.6-1.6,1.6C67.5,4.8,66.8,4.1,66.8,3.2L66.8,3.2z M67,6.7h2.7v13.4H67V6.7z M81.1,11.3 c-0.3-1.4-1.3-2.6-3.1-2.6c-2.1,0-3.5,1.8-3.5,4.6c0,2.9,1.4,4.6,3.5,4.6c1.7,0,2.7-0.9,3.1-2.5h2.6c-0.3,2.8-2.5,4.8-5.7,4.8 c-3.8,0-6.2-2.6-6.2-6.9c0-4.2,2.4-6.9,6.2-6.9c3.4,0,5.4,2.2,5.7,4.8L81.1,11.3L81.1,11.3z M11.5,3.6C10.8,4.4,9.7,5.1,8.6,5 C8.4,3.8,9,2.6,9.6,1.9c0.7-0.9,1.9-1.5,2.9-1.5C12.6,1.5,12.2,2.7,11.5,3.6L11.5,3.6z M12.5,5.2c0.6,0,2.4,0.2,3.6,2 c-0.1,0.1-2.1,1.3-2.1,3.8c0,3,2.6,4,2.6,4c0,0.1-0.4,1.4-1.3,2.8c-0.8,1.2-1.7,2.4-3,2.4c-1.3,0-1.7-0.8-3.2-0.8 c-1.5,0-2,0.8-3.2,0.8c-1.3,0-2.3-1.3-3.1-2.5c-1.7-2.5-3-7-1.2-10c0.8-1.5,2.4-2.5,4-2.5c1.3,0,2.5,0.9,3.2,0.9 C9.5,6.1,10.9,5.1,12.5,5.2L12.5,5.2z"
+                ></path>
+              </svg>
+            </a>
+            <a
+              href="https://music.youtube.com/channel/UCt_azEfohYjiIDbtQxQcKnQ"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube Music"
+              class={styles.dspButton}
+              data-track-dsp="YouTube Music"
+            >
+              <svg
+                height="1.8rem"
+                viewBox=".264 .264 914.755 277.094"
+                width="auto"
+                xmlns="http://www.w3.org/2000/svg"
+                class={styles.dspLogo}
+              >
+                <g fill="none" fill-rule="evenodd">
+                  <path
+                    d="m281.514 138.811c0 38.259-13.73 70.914-41.188 97.967-27.459 27.053-60.604 40.58-99.437 40.58-38.832 0-71.978-13.527-99.437-40.58-27.458-27.053-41.188-59.708-41.188-97.967s13.73-70.914 41.188-97.967c27.46-27.054 60.605-40.58 99.438-40.58s71.978 13.527 99.437 40.58 41.188 59.708 41.188 97.967z"
+                    fill="#f00"></path>
+                  <path
+                    d="m225.264 138.811c0 22.955-8.238 42.549-24.713 58.78-16.475 16.232-36.362 24.348-59.662 24.348s-43.187-8.116-59.662-24.348c-16.475-16.231-24.713-35.825-24.713-58.78s8.238-42.549 24.713-58.78c16.475-16.232 36.363-24.348 59.662-24.348 23.3 0 43.187 8.116 59.662 24.348 16.475 16.231 24.713 35.825 24.713 58.78z"
+                    fill="#f00"></path>
+                  <path
+                    d="m225.264 138.811c0 22.955-8.238 42.549-24.713 58.78-16.475 16.232-36.362 24.348-59.662 24.348s-43.187-8.116-59.662-24.348c-16.475-16.231-24.713-35.825-24.713-58.78s8.238-42.549 24.713-58.78c16.475-16.232 36.363-24.348 59.662-24.348 23.3 0 43.187 8.116 59.662 24.348 16.475 16.231 24.713 35.825 24.713 58.78z"
+                    stroke="#fff"
+                    stroke-width="18.42"></path>
+                  <path
+                    d="m112.764 179.74 73.049-40.917-73.049-40.941zm319.685-68.153c-6.685 32.939-11.765 73.152-14.432 89.755h-1.882c-2.159-17.11-7.239-57.058-14.166-89.478l-17.122-80.692h-52.187v217.633h32.362v-179.417l3.198 16.752 32.905 162.63h32.375l32.362-162.63 3.463-16.845v179.499h32.375v-217.634h-52.682l-16.568 80.427zm156.754 104.533c-2.956 5.969-9.352 10.114-15.794 10.114-7.482 0-10.438-5.704-10.438-19.697v-116.747h-36.921v118.803c0 29.326 9.883 42.788 31.842 42.788 14.963 0 26.994-6.489 35.307-22.04h.808l3.198 19.442h28.887v-158.983h-36.923v126.308h.035zm108.32-63.57c-12.042-8.567-19.523-14.27-19.523-26.716 0-8.81 4.272-13.74 14.432-13.74 10.448 0 13.924 6.986 14.166 30.873l31.046-1.281c2.401-38.632-10.714-54.726-44.681-54.726-31.554 0-47.083 13.74-47.083 42.003 0 25.677 12.85 37.35 33.713 52.67 17.93 13.497 28.367 21.013 28.367 31.912 0 8.313-5.357 14.005-14.72 14.005-10.968 0-17.4-10.125-15.76-27.767l-31.288.508c-4.838 32.928 8.844 52.128 45.2 52.128 31.843 0 48.434-14.27 48.434-42.788-.034-25.942-13.393-36.333-42.303-57.08zm97.907-62.76h-35.318v158.98h35.33v-158.97zm-17.4-62.785c-13.623 0-20.066 4.93-20.066 22.063 0 17.642 6.396 22.04 20.078 22.04 13.912 0 20.066-4.421 20.066-22.04 0-16.325-6.154-22.063-20.078-22.063zm136.157 164.455-32.362-1.559c0 28.01-3.198 37.084-14.155 37.084-10.968 0-12.85-10.125-12.85-43.065v-30.826c0-31.924 2.159-42.014 13.127-42.014 10.16 0 12.839 9.582 12.839 39.174l32.073-2.056c2.16-24.638-1.073-41.506-10.956-51.089-7.24-7.02-18.196-10.356-33.436-10.356-35.838 0-50.558 18.68-50.558 71.051v22.306c0 53.953 12.561 71.329 49.23 71.329 15.517 0 26.208-3.117 33.436-9.86 10.414-9.398 14.42-25.458 13.624-50.12z"
+                    fill="currentColor"></path>
+                </g>
+              </svg>
+            </a>
+            <a
+              href="https://music.amazon.com/artists/B0G96N6B7M"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Amazon Music"
+              class={styles.dspButton}
+              data-track-dsp="Amazon Music"
+            >
+              <svg
+                viewBox="0 0 89.015999 52"
+                xmlns="http://www.w3.org/2000/svg"
+                class={styles.dspLogo}
+              >
+                <g transform="translate(-0.53422889,-18)" fill="currentColor">
+                  <path
+                    d="m 59.7,40.5 c -0.6,0.4 -1.5,0.7 -2.6,0.7 -1.7,0 -3.3,-0.2 -4.9,-0.7 -0.4,-0.1 -0.7,-0.2 -0.9,-0.2 -0.3,0 -0.4,0.2 -0.4,0.6 v 1 c 0,0.3 0.1,0.5 0.2,0.7 0.1,0.1 0.3,0.3 0.6,0.4 1.6,0.7 3.4,1 5.4,1 2.1,0 3.7,-0.5 5,-1.5 1.3,-1 1.9,-2.3 1.9,-4 0,-1.2 -0.3,-2.1 -0.9,-2.9 -0.6,-0.7 -1.6,-1.4 -3,-1.9 l -2.8,-1.1 c -1.1,-0.4 -1.9,-0.8 -2.2,-1.2 -0.4,-0.4 -0.6,-0.8 -0.6,-1.5 0,-1.5 1.1,-2.3 3.4,-2.3 1.3,0 2.6,0.2 3.8,0.6 0.4,0.1 0.7,0.2 0.8,0.2 0.3,0 0.5,-0.2 0.5,-0.6 v -1 c 0,-0.3 -0.1,-0.5 -0.2,-0.7 -0.1,-0.2 -0.3,-0.3 -0.6,-0.4 -1.5,-0.5 -3,-0.8 -4.5,-0.8 -1.9,0 -3.5,0.5 -4.7,1.4 -1.2,0.9 -1.8,2.2 -1.8,3.7 0,2.3 1.3,4 3.9,5 l 3,1.1 c 1,0.4 1.6,0.7 2,1.1 0.4,0.4 0.5,0.8 0.5,1.4 0,0.8 -0.3,1.5 -0.9,1.9 z"
+                  ></path>
+                  <path
+                    d="m 44,26.1 v 13.3 c -1.7,1.1 -3.4,1.7 -5.1,1.7 -1.1,0 -1.9,-0.3 -2.4,-0.9 C 36,39.6 35.8,38.7 35.8,37.4 V 26.1 c 0,-0.5 -0.2,-0.7 -0.7,-0.7 H 33 c -0.5,0 -0.7,0.2 -0.7,0.7 v 12.4 c 0,1.7 0.4,3.1 1.3,4 0.9,0.9 2.2,1.4 3.9,1.4 2.3,0 4.6,-0.8 6.8,-2.4 l 0.2,1.2 c 0,0.3 0.1,0.4 0.3,0.5 0.1,0.1 0.3,0.1 0.6,0.1 h 1.5 c 0.5,0 0.7,-0.2 0.7,-0.7 V 26.1 c 0,-0.5 -0.2,-0.7 -0.7,-0.7 h -2.1 c -0.6,0 -0.8,0.3 -0.8,0.7 z"
+                  ></path>
+                  <path
+                    d="m 25,43.4 h 2.1 c 0.5,0 0.7,-0.2 0.7,-0.7 V 30.2 c 0,-1.7 -0.4,-3 -1.3,-3.9 -0.9,-0.9 -2.1,-1.4 -3.8,-1.4 -2.3,0 -4.7,0.8 -7,2.5 -0.8,-1.7 -2.3,-2.5 -4.5,-2.5 -2.2,0 -4.4,0.8 -6.6,2.3 L 4.4,26.1 C 4.4,25.8 4.3,25.7 4.1,25.6 4,25.5 3.8,25.5 3.6,25.5 H 2 c -0.5,0 -0.7,0.2 -0.7,0.7 v 16.6 c 0,0.5 0.2,0.7 0.7,0.7 h 2.1 c 0.5,0 0.7,-0.2 0.7,-0.7 V 29.3 c 1.7,-1 3.4,-1.6 5.2,-1.6 1,0 1.7,0.3 2.1,0.9 0.4,0.6 0.7,1.4 0.7,2.6 v 11.5 c 0,0.5 0.2,0.7 0.7,0.7 h 2.1 c 0.5,0 0.7,-0.2 0.7,-0.7 V 30.4 29.8 c 0,-0.2 0,-0.4 0,-0.5 1.8,-1.1 3.5,-1.6 5.2,-1.6 1,0 1.7,0.3 2.1,0.9 0.4,0.6 0.7,1.4 0.7,2.6 v 11.5 c 0,0.5 0.2,0.7 0.7,0.7 z"
+                  ></path>
+                  <path
+                    d="m 79.5,56.7 c -10.9,4.6 -22.8,6.9 -33.6,6.9 -16,0 -31.5,-4.4 -44,-11.7 -0.2,-0.1 -0.4,-0.2 -0.6,-0.2 -0.7,0 -1.1,0.8 -0.4,1.5 11.6,10.5 27,16.8 44,16.8 12.2,0 26.3,-3.8 36,-11 1.7,-1.2 0.3,-3 -1.4,-2.3 z"
+                  ></path>
+                  <path
+                    d="m 79.2,29.4 c 0.9,-1 2.3,-1.5 4.3,-1.5 1,0 2,0.1 2.9,0.4 0.3,0.1 0.4,0.1 0.6,0.1 0.3,0 0.5,-0.2 0.5,-0.7 v -1 C 87.5,26.4 87.4,26.1 87.3,26 87.2,25.9 87,25.7 86.8,25.6 85.5,25.3 84.2,25 83,25 c -2.8,0 -4.9,0.8 -6.5,2.5 -1.5,1.6 -2.3,4 -2.3,7 0,3 0.7,5.3 2.2,6.9 1.5,1.6 3.6,2.4 6.4,2.4 1.5,0 2.9,-0.2 4,-0.7 0.3,-0.1 0.5,-0.2 0.6,-0.4 0.1,-0.1 0.1,-0.4 0.1,-0.7 v -1 c 0,-0.5 -0.2,-0.7 -0.5,-0.7 -0.1,0 -0.3,0 -0.5,0.1 -1.1,0.3 -2.2,0.5 -3.2,0.5 -1.9,0 -3.3,-0.5 -4.2,-1.5 -0.9,-1 -1.3,-2.6 -1.3,-4.7 v -0.5 c 0.1,-2.2 0.5,-3.8 1.4,-4.8 z"
+                  ></path>
+                  <path
+                    d="M 83.7,66.1 C 88.9,61.7 90.3,52.6 89.2,51.2 88.7,50.6 86.3,50 83.3,50 c -3.2,0 -7,0.7 -9.9,2.7 -0.9,0.6 -0.7,1.4 0.2,1.3 3.1,-0.4 10.1,-1.2 11.4,0.4 1.2,1.6 -1.4,8.2 -2.6,11.1 -0.3,0.9 0.4,1.2 1.3,0.6 z"
+                  ></path>
+                  <path
+                    d="m 69.8,25.4 h -2.1 c -0.5,0 -0.7,0.2 -0.7,0.7 v 16.6 c 0,0.5 0.2,0.7 0.7,0.7 h 2.1 c 0.5,0 0.7,-0.2 0.7,-0.7 V 26.1 c 0,-0.4 -0.2,-0.7 -0.7,-0.7 z"
+                  ></path>
+                  <path
+                    d="M 70.4,18.6 C 70,18.2 69.4,18 68.7,18 c -0.7,0 -1.2,0.2 -1.6,0.6 -0.4,0.4 -0.6,0.9 -0.6,1.5 0,0.6 0.2,1.2 0.6,1.5 0.4,0.4 0.9,0.6 1.6,0.6 0.7,0 1.2,-0.2 1.6,-0.6 0.4,-0.4 0.6,-0.9 0.6,-1.5 0,-0.6 -0.1,-1.2 -0.5,-1.5 z"
+                  ></path>
+                </g>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class={styles["stats-container"]}>
+          <div class={styles["stat-item"]} data-gsap="stat">
+            <span class={styles["stat-value"]}>173K+</span>
+            <span class={styles["stat-label"]}>Monthly Views (Instagram)</span>
+          </div>
+          <div class={styles["stat-item"]} data-gsap="stat">
+            <span class={styles["stat-value"]}>3K+</span>
+            <span class={styles["stat-label"]}
+              >Streams in 15 Days (Spotify)</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class={styles["visual-side"]} data-gsap="visual">
+        <div class={styles["device-mockup"]}>
+          <div class={styles["device-frame"]}>
+            <div class={styles["device-notch"]}></div>
+            <div class={styles["device-screen"]}>
+              {
+                pinnedVideos.map((src, index) => (
+                  <video
+                    src={src}
+                    muted
+                    loop={false}
+                    playsinline
+                    preload="auto"
+                    width="720"
+                    height="1280"
+                    class={styles["device-video"]}
+                    data-mockup-video
+                    data-active={index === 0 ? "true" : "false"}
+                    style={{ opacity: index === 0 ? 1 : 0 }}
+                  />
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <InstagramFeed /> -->
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const initAnimations = () => {
+    const section = document.getElementById("overview");
+    if (!section) return;
+
+    const introOverlay = document.getElementById("global-intro-overlay");
+    const card = section.querySelector('[data-gsap="card"]');
+    const title = section.querySelector('[data-gsap="title"]');
+    const dsp = section.querySelector('[data-gsap="dsp"]');
+    const stats = section.querySelectorAll('[data-gsap="stat"]');
+    const visual = section.querySelector('[data-gsap="visual"]');
+    const overlay = section.querySelector('[data-gsap="overlay"]');
+
+    // Initial state
+    gsap.set(introOverlay, { xPercent: 0 });
+    gsap.set(card, { y: 40, autoAlpha: 0 });
+    gsap.set(title, { x: -20, autoAlpha: 0 });
+    gsap.set(dsp, { y: 10, autoAlpha: 0 });
+    gsap.set(stats, { scale: 0.8, autoAlpha: 0 });
+    gsap.set(visual, { x: 20, autoAlpha: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 80%",
+        once: true,
+      },
+      delay: 0.2, // Small delay after reveal
+    });
+
+    tl.to(introOverlay, {
+      xPercent: 100,
+      duration: 1.2,
+      ease: "expo.inOut",
+    })
+      .to(
+        card,
+        { y: 0, autoAlpha: 1, duration: 0.8, ease: "power3.out" },
+        "-=1.2",
+      )
+      .to(
+        [title, dsp],
+        {
+          x: 0,
+          y: 0,
+          autoAlpha: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+        },
+        "-=0.4",
+      )
+      .to(
+        visual,
+        { x: 0, autoAlpha: 1, duration: 0.8, ease: "power2.out" },
+        "-=0.6",
+      )
+      .to(
+        stats,
+        {
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.5,
+          stagger: 0.1,
+          ease: "back.out(1.7)",
+        },
+        "-=0.4",
+      );
+
+    // Background opacity scrub - Fixed to Dark Theme
+    const baseColor = "rgba(0, 0, 0, 0.5)";
+    const midColor = "rgba(0, 0, 0, 0.85)";
+
+    gsap.set(overlay, {
+      backgroundColor: baseColor,
+      backdropFilter: "blur(0px)",
+      webkitBackdropFilter: "blur(0px)",
+    });
+
+    const overlayTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      },
+    });
+
+    overlayTl
+      .to(overlay, {
+        backgroundColor: midColor,
+        backdropFilter: "blur(4px)",
+        webkitBackdropFilter: "blur(4px)",
+        duration: 1,
+      })
+      .to(overlay, {
+        backgroundColor: baseColor,
+        backdropFilter: "blur(8px)",
+        webkitBackdropFilter: "blur(8px)",
+        duration: 1,
+      });
+
+    // --- Device Video Cross-fade Loop ---
+    const videos = section.querySelectorAll(
+      "video[data-mockup-video]",
+    ) as NodeListOf<HTMLVideoElement>;
+    let currentIndex = 0;
+
+    const switchVideo = () => {
+      const currentVideo = videos[currentIndex];
+      const nextIndex = (currentIndex + 1) % videos.length;
+      const nextVideo = videos[nextIndex];
+
+      // Prepare next video
+      nextVideo.currentTime = 0;
+      nextVideo.play();
+
+      // Fade out current, Fade in next
+      gsap.to(currentVideo, {
+        opacity: 0,
+        duration: 1.2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          currentVideo.pause();
+          currentVideo.setAttribute("data-active", "false");
+        },
+      });
+
+      gsap.to(nextVideo, {
+        opacity: 1,
+        duration: 1.2,
+        ease: "power2.inOut",
+        onComplete: () => {
+          nextVideo.setAttribute("data-active", "true");
+          currentIndex = nextIndex;
+        },
+      });
+    };
+
+    // --- Start Playback Immediately ---
+    if (videos.length > 0) {
+      videos[0].play();
+
+      // Loop interval (18s)
+      setInterval(() => {
+        if (document.hidden) return;
+        switchVideo();
+      }, 18000);
+    }
+
+    // --- Meta Pixel Tracking for DSP Links ---
+    const dspButtons = section.querySelectorAll("[data-track-dsp]");
+    dspButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const platform = btn.getAttribute("data-track-dsp");
+        // @ts-ignore - fbq is loaded globally
+        if (typeof fbq === "function") {
+          // @ts-ignore
+          fbq("set", "testEventCode", "TEST26198");
+          // @ts-ignore
+          fbq("track", "FindLocation", {
+            content_name: platform,
+            content_category: "DSP Link",
+          });
+        }
+      });
+    });
+  };
+
+  // Run on preloader complete or immediately if skipped
+  if (sessionStorage.getItem("visited")) {
+    initAnimations();
+  } else {
+    window.addEventListener("preloaderStartFade", initAnimations);
+  }
+</script>

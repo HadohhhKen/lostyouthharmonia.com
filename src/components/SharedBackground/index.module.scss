@@ -1,0 +1,55 @@
+// src/components/SharedBackground/index.module.scss
+
+.SharedBackground {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100lvh;
+  z-index: -10; /* Absolute baseline */
+  pointer-events: none;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .dark-only {
+    display: none;
+    @media (prefers-color-scheme: dark) {
+      display: block;
+    }
+  }
+
+  .light-only {
+    display: none;
+    @media (prefers-color-scheme: light) {
+      display: block;
+    }
+  }
+
+  .overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    
+    /* Hero-standard gradients */
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.2) 0%,
+      rgba(255, 255, 255, 0.8) 100%
+    );
+
+    @media (prefers-color-scheme: dark) {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(3, 3, 5, 0.95) 100%
+      );
+    }
+  }
+}

@@ -1,0 +1,12 @@
+---
+// src/components/Footer/index.astro
+import styles from "./index.module.scss";
+---
+
+<footer class={styles.footer}>
+  <div class:list={["container", styles["footer-inner"]]}>
+    <div class={styles.copyright}>
+      &copy; {new Date().getFullYear()} Lost Youth Harmonia. All rights reserved.
+    </div>
+  </div>
+</footer>

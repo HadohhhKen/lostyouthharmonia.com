@@ -1,0 +1,373 @@
+@use "../../styles/mixins" as *;
+
+.SectionLLC {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  clip-path: inset(0); /* Crucial: Clips fixed children to this container */
+  min-height: 100lvh;
+
+  /* Liquid-friendly Vertical Centering */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-bottom: 6vh; /* Shifts the true center slightly upwards for visual balance */
+}
+
+.SectionLLC__bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100lvh;
+  object-fit: cover;
+  z-index: -1; /* Absolute baseline */
+  transition: transform 0.8s ease-out;
+}
+
+.SectionLLC__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.SectionLLC__inner {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: var(--space-md);
+  position: relative;
+  z-index: 2;
+}
+
+.card {
+  @include glass-card;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+
+  @media (min-width: 769px) {
+    grid-template-columns: 0.6fr 1.4fr;
+    grid-template-areas: "visual text";
+    align-items: center;
+
+    .content-side {
+      grid-area: text;
+    }
+
+    .visual-side {
+      grid-area: visual;
+    }
+  }
+}
+
+.mobileBr {
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+  }
+}
+
+.title {
+  @include section-title;
+  margin-top: 0;
+  color: #fff;
+  font-size: clamp(
+    1.2rem,
+    calc(100vw * (48 / 1440)),
+    3rem
+  ); /* mobile-first fluid sizing */
+  letter-spacing: 0.05em;
+
+  @media (max-width: 768px) {
+    display: block;
+    font-size: clamp(
+      1.8rem,
+      8vw,
+      2.2rem
+    ); /* Slightly larger now that it wraps */
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    text-align: center;
+    &::after {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  & span {
+    display: inline-block;
+  }
+}
+
+.dspLinks {
+  margin-block: var(--space-md) var(--space-lg);
+
+  .dspLabel {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.8rem;
+
+    @media (max-width: 768px) {
+      text-align: center;
+    }
+  }
+
+  .dspIcons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    gap: clamp(0.5rem, calc(100vw * (24 / 1440)), 1.5rem);
+    align-items: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  .dspButton {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-text);
+    transition: all 0.3s ease;
+
+    .dspLogo {
+      width: auto;
+      transition: all 0.3s ease;
+      color: #fff;
+    }
+
+    // Individual scaling for visual alignment based on 1440px design
+    @media (min-width: 769px) {
+      &:nth-child(1) .dspLogo {
+        height: clamp(2rem, calc(100vw * (54 / 1440)), 3.375rem);
+      }
+      &:nth-child(2) .dspLogo {
+        height: clamp(1.1rem, calc(100vw * (30 / 1440)), 1.875rem);
+      }
+      &:nth-child(3) .dspLogo {
+        height: clamp(1.5rem, calc(100vw * (40 / 1440)), 2.5rem);
+      }
+      &:nth-child(4) .dspLogo {
+        height: clamp(1.6rem, calc(100vw * (44 / 1440)), 2.75rem);
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--color-border);
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--radius-sm);
+      justify-content: center;
+
+      .dspLogo {
+        height: 1.6rem;
+      }
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--color-accent);
+      }
+    }
+
+    @media (min-width: 769px) {
+      padding: 4px 0;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+.stats-container {
+  display: flex;
+  gap: var(--space-xl);
+
+  @media (max-width: 768px) {
+    gap: var(--space-md);
+    justify-content: space-between;
+  }
+
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--color-accent);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.1em;
+    }
+  }
+}
+
+.visual-side {
+  width: 100%;
+  position: relative; /* Anchor for absolute mockup */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+/* Vector Device Mockup - Out of Bounds & Isometric */
+.device-mockup {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1500px;
+  z-index: 10;
+
+  @media (min-width: 769px) {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    width: 140%; /* Massively upscaled to pierce ceiling */
+    max-width: 440px;
+    transform: translate(-50%, -50%);
+    /* Pierces top and bottom of the card smoothly */
+  }
+}
+
+.device-frame {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  aspect-ratio: 9 / 19.5; /* iPhone proportional shape */
+  background: #1e1e1f; /* Frame rim base color */
+  border-radius: 40px;
+  padding: 10px; /* Sleeker bezel */
+  margin: 0 auto;
+
+  /* Isometric Transformation (Positive rotateY = Left edge closer, screen points Right) */
+  transform-style: preserve-3d;
+  transform: rotateY(28deg) rotateX(6deg) rotateZ(-2deg);
+
+  /* 3D Extrusion - Left and bottom edges visible. 
+     Left edge is physically closer to viewer, so back of phone projects leftwards (-X) */
+  box-shadow:
+    inset 0 0 3px 3px rgba(255, 255, 255, 0.15),
+    inset 0 0 0 6px #0a0a0a,
+    /* Inner glass margin */ -1px 0px 0 #5a5a5e,
+    -2px 1px 0 #555559,
+    -3px 1px 0 #505054,
+    -4px 2px 0 #4a4a4f,
+    -5px 2px 0 #45454a,
+    -6px 3px 0 #404045,
+    -7px 3px 0 #3a3a3f,
+    -8px 4px 0 #35353a,
+    -9px 4px 0 #303035,
+    -10px 5px 0 #2a2a2e,
+    -11px 5px 0 #2a2a2e,
+    -12px 6px 0 #2a2a2e,
+    -13px 6px 0 #2a2a2e,
+    -14px 7px 0 #252525,
+    -15px 7px 0 #202020,
+    -16px 8px 0 #111,
+    /* Final back edge depth */ -17px 8px 2px rgba(255, 255, 255, 0.1),
+    -50px 40px 100px rgba(0, 0, 0, 0.6);
+
+  /* Volume buttons on the left edge - properly aligned to the 3D extrusion depth */
+  &::before {
+    content: "";
+    position: absolute;
+    left: -19px; /* Sits precisely on the 16px extruded edge */
+    top: 138px; /* Shifted down to match extrusion drop */
+    width: 3px;
+    height: 40px;
+    background: #111;
+    border-radius: 4px 0 0 4px;
+    box-shadow: 0 55px 0 #111;
+  }
+
+  /* Power button is completely hidden behind the right edge of the screen 
+     since the right side is turned away. */
+
+  /* Subtle floating/hover effect */
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  @media (hover: hover) {
+    &:hover {
+      /* Floats up, screen turns slightly more towards user */
+      transform: rotateY(24deg) rotateX(4deg) rotateZ(-1deg) translateY(-15px);
+    }
+  }
+}
+
+.device-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  border-radius: 34px; /* Inner screen curvature perfectly nested */
+  overflow: hidden;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.8); /* Depth from screen to glass */
+}
+
+/* Dynamic Island / Notch */
+.device-notch {
+  position: absolute;
+  top: 22px; /* Just below inner padding */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 26px;
+  background-color: #000;
+  border-radius: 20px;
+  z-index: 10;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.1);
+
+  /* A tiny camera dot */
+  &::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.05); /* very dark glass reflection */
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+.device-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none; /* Disables right-click and native controls interacting */
+  border-radius: 34px; /* Matches inner screen perfectly */
+  opacity: 0; /* Hidden by default for cross-fade */
+
+  &[data-active="true"] {
+    opacity: 1;
+  }
+}

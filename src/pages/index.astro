@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import SectionLLC from "../components/SectionLLC/index.astro";
+import Footer from "../components/Footer/index.astro";
+---
+
+<Layout title="Lost Youth Harmonia | SF Musical Novel Project">
+  <div class="global-intro-overlay" id="global-intro-overlay" style="position: fixed; inset: 0; background: var(--color-bg); z-index: 9900; pointer-events: none; will-change: transform;"></div>
+  <main>
+    <SectionLLC />
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  main {
+    width: 100%;
+    overflow: hidden;
+  }
+</style>

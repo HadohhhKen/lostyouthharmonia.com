@@ -1,0 +1,269 @@
+---
+// src/layouts/Layout.astro
+import Preloader from "../components/Preloader/index.astro";
+import bgDark from "../assets/images/hero/bg-dark.png";
+
+export interface Props {
+  title: string;
+  showPreloader?: boolean;
+}
+
+const { title, showPreloader = true } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content="Lost Youth Harmonia — SF/SCI-FI世界観の音楽＆ノベルプロジェクト。ハードボイルドな物語とサウンドが交差する。"
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <style is:inline>
+      :root {
+        --color-bg: #fafafa;
+        --color-text: #000000;
+        --color-accent: #00b386;
+        --color-border: rgba(0, 0, 0, 0.1);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-bg: #030305;
+          --color-text: #ffffff;
+          --color-accent: #00ffcc;
+          --color-border: rgba(255, 255, 255, 0.1);
+        }
+      }
+      html {
+        background-color: var(--color-bg);
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: transparent;
+        min-height: 100vh;
+      }
+
+      html.is-loading {
+        overflow: hidden;
+      }
+      html.is-loading body {
+        visibility: hidden;
+      }
+
+      #global-preloader {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100lvh;
+        z-index: 99999;
+        /* is-loading 適用下でも Preloader は強制表示させる */
+        visibility: visible;
+        background-color: var(--color-bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition:
+          opacity 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+          visibility 0.6s;
+      }
+      #global-preloader.is-hidden {
+        opacity: 0;
+        visibility: hidden;
+      }
+      .preloader-spinner {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: 2px solid var(--color-border);
+        border-top-color: var(--color-text);
+        animation: preloader-spin 0.8s linear infinite;
+      }
+      @media (prefers-color-scheme: dark) {
+        .preloader-spinner {
+          border-top-color: var(--color-accent);
+        }
+      }
+      @keyframes preloader-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+
+    <script is:inline>
+      // Immediately add loading class to prevent flash of content
+      if (!sessionStorage.getItem('visited')) {
+        document.documentElement.classList.add('is-loading');
+      }
+    </script>
+
+    <!-- Preload LCP hero image (Using optimized asset URL) -->
+    <link rel="preload" as="image" href={bgDark.src} />
+
+    <!-- Fonts: swap ensures text is visible during load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+JP:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Cloudflare Turnstile -->
+    <script
+      is:inline
+      src="https://challenges.cloudflare.com/turnstile/v0/api.js"
+      async
+      defer></script>
+
+
+    <!-- Devicon: non-render-blocking async load -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+      /></noscript
+    >
+    <!-- Meta Pixel Code -->
+    <script is:inline>
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js",
+      );
+      fbq("init", "1471034844516882");
+      fbq("track", "PageView");
+    </script>
+    <noscript
+      ><img
+        height="1"
+        width="1"
+        style="display:none"
+        src="https://www.facebook.com/tr?id=1471034844516882&ev=PageView&noscript=1"
+      /></noscript
+    >
+    <!-- End Meta Pixel Code -->
+  </head>
+  <body>
+
+
+    {showPreloader && <Preloader />}
+    <slot />
+
+    <script>
+      import Lenis from "@studio-freight/lenis";
+      import { gsap } from "gsap";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Detect touch device (smartphone, tablet, etc.)
+      // Pointer: coarse indicates a less precise input like a finger.
+      const isTouchDevice = window.matchMedia("(pointer: coarse)").matches;
+
+      let lenis: Lenis | undefined;
+
+      if (!isTouchDevice) {
+        // Initialize Lenis only for non-touch devices
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
+
+        // Expose to window for control from other components
+        (window as any).lenis = lenis;
+
+        function raf(time: number) {
+          lenis?.raf(time);
+          requestAnimationFrame(raf);
+        }
+
+        requestAnimationFrame(raf);
+
+        // Lenis integration with GSAP ScrollTrigger
+        lenis.on("scroll", ScrollTrigger.update);
+        gsap.ticker.add((time: number) => {
+          lenis?.raf(time * 1000);
+        });
+        gsap.ticker.lagSmoothing(0, 0);
+      }
+
+      // Smooth scroll for anchor links (Supporting both #hash and /#hash)
+      document.querySelectorAll('a[href*="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", (e) => {
+          const href = (anchor as HTMLAnchorElement).getAttribute("href");
+          if (!href) return;
+
+          // Create a URL object for consistent comparison
+          // Use window.location.origin as base to handle both absolute and relative paths
+          const targetUrl = new URL(href, window.location.origin);
+          const currentUrl = new URL(window.location.href);
+
+          // Normalize pathnames by removing trailing slash (except for empty string)
+          const normalize = (p: string) => p.replace(/\/$/, "") || "/";
+          const isSamePage =
+            normalize(targetUrl.pathname) === normalize(currentUrl.pathname);
+
+          // If pathnames match, it's a same-page jump
+          if (isSamePage && targetUrl.hash) {
+            const target = document.querySelector(targetUrl.hash);
+            if (target) {
+              e.preventDefault();
+
+              if (lenis) {
+                // Use Lenis scroll for desktop
+                const headerHeight =
+                  parseInt(
+                    getComputedStyle(document.documentElement).getPropertyValue(
+                      "--header-height",
+                    ),
+                  ) || 60;
+                lenis.scrollTo(target as HTMLElement, {
+                  offset: -headerHeight,
+                });
+              } else {
+                // Use native smooth scroll for touch devices
+                target.scrollIntoView({ behavior: "smooth" });
+              }
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style is:global lang="scss">
+  @use "../styles/global.scss";
+</style>

@@ -1,0 +1,55 @@
+.preloader {
+  /* Critical structure is now inlined in Layout.astro head */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  animation: logo-pulse 2s ease-in-out infinite;
+
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+  }
+}
+
+.line {
+  width: 80px;
+  height: 1px;
+  background: var(--color-border);
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    transform: translateX(-100%);
+    animation: line-progress 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes logo-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes line-progress {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(0%); }
+  100% { transform: translateX(100%); }
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <style>
+    .logo-text {
+    fill: #151515;
+    }
+    @media (prefers-color-scheme: dark) {
+    .logo-text {
+    fill: #ffffff;
+    }
+    }
+  </style>
+  <rect width="400" height="400" fill="none" />
+  <g class="logo-text" font-family="'Times New Roman', Times, serif" font-size="400">
+    <text x="0" y="320">C</text>
+    <text x="200" y="320">S</text>
+  </g>
+</svg>

@@ -1,0 +1,110 @@
+---
+// src/components/Header/index.astro
+import styles from "./index.module.scss";
+
+const isHome = Astro.url.pathname.replace(/\/$/, '') === '';
+const rootPrefix = isHome ? "" : "/";
+---
+
+<header class={styles.header} id="global-header" data-nav-open="false">
+  <div class={styles["header-inner"]}>
+    <div class={styles.logo}>
+      <a href="/">Lost Youth Harmonia</a>
+    </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button class={styles.hamburger} aria-label="Menu" id="hamburger-btn">
+      <span class={styles.bar}></span>
+      <span class={styles.bar}></span>
+      <span class={styles.bar}></span>
+    </button>
+
+    <nav class={styles.nav} id="global-nav">
+      <ul>
+        <li><a href={`${rootPrefix}#overview`}>OVERVIEW</a></li>
+        <li><a href={`${rootPrefix}#feed`}>FEED</a></li>
+        <li><a href={`${rootPrefix}#contact`}>CONTACT</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('hamburger-btn');
+    const nav = document.getElementById('global-nav');
+    const header = document.getElementById('global-header');
+    
+    let scrollPosition = 0;
+
+    if(btn && nav && header) {
+      const toggleMenu = () => {
+        const isOpen = header.getAttribute('data-nav-open') === 'true';
+        
+        if (!isOpen) {
+          // OPENING: Capture scroll and lock body tightly
+          scrollPosition = window.scrollY;
+          document.body.style.position = 'fixed';
+          document.body.style.top = `-${scrollPosition}px`;
+          document.body.style.width = '100%';
+          document.body.style.overflow = 'hidden';
+          header.setAttribute('data-nav-open', "true");
+        } else {
+          // CLOSING: Release locks and restore exact scroll
+          header.setAttribute('data-nav-open', "false");
+          document.body.style.removeProperty('position');
+          document.body.style.removeProperty('top');
+          document.body.style.removeProperty('width');
+          document.body.style.removeProperty('overflow');
+          
+          window.scrollTo(0, scrollPosition);
+        }
+      };
+
+      btn.addEventListener('click', toggleMenu);
+
+      // Auto-collapse and COORDINATED navigation
+      const links = nav.querySelectorAll('a');
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const href = link.getAttribute('href');
+          
+          // Only apply coordinated sequence for same-page anchors
+          if (href && href.includes('#') && header.getAttribute('data-nav-open') === 'true') {
+            const url = new URL(href, window.location.origin);
+            const isSamePage = url.pathname === window.location.pathname || url.pathname === window.location.pathname + '/';
+            
+            if (isSamePage) {
+              e.preventDefault(); // Stop default jump
+              
+              const targetId = url.hash;
+              const targetEl = document.querySelector(targetId);
+              
+              // 1. Release Lock & Restore Coordinate
+              toggleMenu(); 
+              
+              // 2. Wait for layout to stabilize
+              requestAnimationFrame(() => {
+                if (targetEl) {
+                  const lenis = (window as any).lenis;
+                  const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 60;
+                  
+                  if (lenis) {
+                    // PC: Lenis Scroll
+                    lenis.scrollTo(targetEl, { offset: -headerHeight });
+                  } else {
+                    // SP: Native Scroll
+                    targetEl.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }
+              });
+            }
+          } else if (header.getAttribute('data-nav-open') === 'true') {
+            // Non-anchor or cross-page: Just close and let default navigation happen
+            toggleMenu();
+          }
+        });
+      });
+    }
+  });
+</script>

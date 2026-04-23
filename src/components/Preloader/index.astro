@@ -1,0 +1,78 @@
+---
+// src/components/Preloader/index.astro
+import styles from "./index.module.scss";
+---
+
+<div 
+  id="global-preloader" 
+  class={styles.preloader}
+>
+  <div class={styles.container}>
+    <div class="preloader-spinner"></div>
+  </div>
+</div>
+
+<script is:inline>
+  // Block 1: Speed up repeat visits
+  if (sessionStorage.getItem('visited')) {
+    const el = document.getElementById('global-preloader');
+    if (el) el.style.display = 'none';
+    document.documentElement.classList.remove('is-loading');
+  }
+</script>
+
+<script>
+  const initPreloader = () => {
+    const preloader = document.getElementById("global-preloader");
+    if (!preloader) return;
+
+    if (sessionStorage.getItem('visited')) {
+      preloader.remove();
+      window.dispatchEvent(new Event('preloaderComplete'));
+      return;
+    }
+
+    let isFinished = false;
+
+    const finishPreloader = () => {
+      if (isFinished) return;
+      isFinished = true;
+
+      // Ensure a minimum display time for the preloader to avoid a quick jump
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          sessionStorage.setItem('visited', 'true');
+          preloader.classList.add('is-hidden');
+          
+          // Reveal page content just as preloader starts fading
+          document.documentElement.classList.remove('is-loading');
+          window.dispatchEvent(new Event('preloaderStartFade'));
+
+          preloader.addEventListener('transitionend', () => {
+            preloader.remove();
+            window.dispatchEvent(new Event('preloaderComplete'));
+          }, { once: true });
+
+          // Fallback if transitionend fails or is blocked
+          setTimeout(() => {
+            if (preloader.parentNode) {
+              preloader.remove();
+              window.dispatchEvent(new Event('preloaderComplete'));
+            }
+          }, 1000);
+        });
+      }, 800); // Minimum 800ms to appreciate the design and allow buffering
+    };
+
+    // Wait for BOTH fonts and window load (images/vids)
+    const loadPromise = new Promise(resolve => window.addEventListener('load', resolve));
+    const fontsPromise = document.fonts.ready;
+
+    Promise.all([loadPromise, fontsPromise]).then(finishPreloader);
+    
+    // Safety timeout: don't hang forever
+    setTimeout(finishPreloader, 3000);
+  };
+
+  initPreloader();
+</script>
