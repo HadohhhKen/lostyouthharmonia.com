@@ -107,6 +107,9 @@
 
 .dspLinks {
   margin-block: var(--space-md) var(--space-lg);
+  @media (max-width: 768px) {
+    margin-bottom: 0;
+  }
 
   .dspLabel {
     font-size: 0.8rem;
@@ -196,8 +199,7 @@
   gap: var(--space-xl);
 
   @media (max-width: 768px) {
-    gap: var(--space-md);
-    justify-content: space-between;
+    display: none;
   }
 
   .stat-item {
