@@ -10,8 +10,9 @@
     }
   </style>
   <rect width="400" height="400" fill="none" />
-  <g class="logo-text" font-family="'Times New Roman', Times, serif" font-size="400">
-    <text x="0" y="320">C</text>
-    <text x="200" y="320">S</text>
+  <g class="logo-text" font-family="'Times New Roman', Times, serif" font-size="320" font-weight="bold">
+    <text x="10" y="230">L</text>
+    <text x="80" y="320">Y</text>
+    <text x="150" y="400">H</text>
   </g>
 </svg>
