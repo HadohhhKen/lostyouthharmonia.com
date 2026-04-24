@@ -3,8 +3,6 @@
   bottom: 0;
   width: 100%;
   padding: var(--space-md) 0 var(--space-md);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: #000;
 }
 
 .footer-inner {
@@ -46,4 +44,7 @@
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.4);
   letter-spacing: 0.05em;
+  @media (max-width: 768px) {
+    font-size: 10px;
+  }
 }
